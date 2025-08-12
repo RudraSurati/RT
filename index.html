@@ -226,7 +226,7 @@
 
     <div class="game-back d-none">
         <div class="timer" onclick="location.reload()">
-            <h1 class="tt" ><span class="sec">00</span> . <span class="milisec">000</span></h1>
+            <h1 class="tt" ><span class="sec">00</span> . <span class="milisec">00000</span></h1>
         </div>
     </div>
     
@@ -244,23 +244,27 @@
             document.querySelector('body').style.background = '#000'
         }
 
-        function gameOn() {
-            const s = document.querySelector(".sec");
-            const m = document.querySelector(".milisec");
-            startTime = performance.now();
+// ...existing code...
+function gameOn() {
+    const s = document.querySelector(".sec");
+    const m = document.querySelector(".milisec");
+    startTime = performance.now();
 
-            document.querySelector('body').style.background = '#dbdbdb'
-            document.querySelector(".preventor").classList.add("d-none");
-            document.querySelector(".stopper").classList.remove("d-none");
-            timerInterval = setInterval(() => {
-                const elapsed = performance.now() - startTime;
-                const seconds = Math.floor(elapsed / 1000);
-                const milliseconds = Math.floor(elapsed % 1000);
+    document.querySelector('body').style.background = '#dbdbdb'
+    document.querySelector(".preventor").classList.add("d-none");
+    document.querySelector(".stopper").classList.remove("d-none");
+    timerInterval = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        const seconds = Math.floor(elapsed / 1000);
+        const msFraction = elapsed - Math.floor(elapsed); // fractional ms
+        const milliseconds = Math.floor((elapsed % 1000)).toString().padStart(3, '0');
+        const microseconds = Math.floor(msFraction * 100000).toString().padStart(5, '0');
 
-                s.textContent = seconds.toString().padStart(2, '0');
-                m.textContent = milliseconds.toString().padStart(3, '0');
-            }, 1); // update as fast as possible for accuracy
-        }
+        s.textContent = seconds.toString().padStart(2, '0');
+        m.textContent = milliseconds + microseconds.slice(0, 2); // 5 digits after decimal
+    }, 1); // update as fast as possible for accuracy
+}
+// ...existing code...
 
         // Optionally, add a function to stop the timer:
         function stopTimer() {
